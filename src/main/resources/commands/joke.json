@@ -1,0 +1,32 @@
+{
+  "name": "joke",
+  "description": "Tells a joke",
+  "options": [
+    {
+      "name": "safe",
+      "description": "Jokes can be rough sometimes",
+      "required": true,
+      "type": 5
+    },
+    {
+      "name": "language",
+      "description": "The language of the joke",
+      "required": false,
+      "type": 3,
+      "choices": [
+        {
+          "name": "fr",
+          "value": "fr"
+        },
+        {
+          "name": "es",
+          "value": "es"
+        },
+        {
+          "name": "de",
+          "value": "de"
+        }
+      ]
+    }
+  ]
+}
