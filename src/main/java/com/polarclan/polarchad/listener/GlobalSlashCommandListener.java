@@ -1,6 +1,9 @@
 package com.polarclan.polarchad.listener;
 
-import com.polarclan.polarchad.commands.*;
+import com.polarclan.polarchad.commands.FactCommand;
+import com.polarclan.polarchad.commands.JokeCommand;
+import com.polarclan.polarchad.commands.PingCommand;
+import com.polarclan.polarchad.commands.SlashCommand;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -8,17 +11,15 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlashCommandListener {
+public class GlobalSlashCommandListener {
+
     private final static List<SlashCommand> commands = new ArrayList<>();
 
     static {
         //We register our commands here when the class is initialized
         commands.add(new PingCommand());
-        commands.add(new GreetCommand());
-        commands.add(new SusCommand());
-        commands.add(new UserCommand());
-        commands.add(new ServerCommand());
         commands.add(new JokeCommand());
+        commands.add(new FactCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {

@@ -22,7 +22,11 @@ public class SusCommand implements SlashCommand {
                     int randomMemberIndex = new Random().nextInt(0, membersCount);
                     Member randomMember = guild.requestMembers().collectList().block().get(randomMemberIndex);
 
-                    if (randomMember.isBot())
+
+                    if (randomMember.getDisplayName().equalsIgnoreCase("Polar Chad"))
+                        return Mono.just("Sorry to break hearts but.... I'm the impostor");
+
+                    else if (randomMember.isBot())
                         return Mono.just(randomMember.getMention() + "? Never suspected that a bot could act sussy.");
                     else
                         return Mono.just("You're acting kinda sus " + randomMember + ". You might be the impostor!");

@@ -1,6 +1,8 @@
 package com.polarclan.polarchad;
 
-import com.polarclan.polarchad.listener.SlashCommandListener;
+import com.polarclan.polarchad.commands.FactCommand;
+import com.polarclan.polarchad.listener.GlobalSlashCommandListener;
+import com.polarclan.polarchad.listener.GuildSlashCommandListener;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -19,6 +21,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        FactCommand.getFactOfTheDay();
+
         //Creates the gateway client and connects to the gateway
         final GatewayDiscordClient client = DiscordClientBuilder.create(System.getenv("BOT_TOKEN"))
                 .build()
@@ -28,28 +32,33 @@ public class Main {
                 .block();
 
 
-        ClientActivity botActivity = ClientActivity.playing("Rocket League");
+        ClientActivity botActivity = ClientActivity.streaming("Lofi", "https://www.youtube.com/watch?v=jfKfPfyJRdk&pp=ygUEbG9maQ%3D%3D");
         ClientPresence botPresence = ClientPresence.online(botActivity);
 
         client.updatePresence(botPresence).subscribe();
 
-        List<String> commands = List.of("greet.json", "ping.json", "sus.json", "user.json", "server.json", "joke.json");
-
-//        try {
-//            new GlobalCommandRegistrar(client.getRestClient()).registerCommands(commands);
-//        } catch (Exception e) {
-//            LOGGER.error("Error trying to register global slash commands", e);
-//        }
+        List<String> guildCommands = List.of("greet.json", "sus.json", "user.json", "server.json");
+        List<String> globalCommands = List.of("ping.json", "joke.json", "fact.json");
 
         try {
-            new GuildCommandRegistrar(client.getRestClient()).registerCommands(commands);
+            new GlobalCommandRegistrar(client.getRestClient()).registerCommands(globalCommands);
+        } catch (Exception e) {
+            LOGGER.error("Error trying to register global slash commands", e);
+        }
+
+        try {
+            new GuildCommandRegistrar(client.getRestClient()).registerCommands(guildCommands);
         } catch (Exception e) {
             LOGGER.error("Error trying to register guild slash commands", e);
         }
 
-        //Register our slash command listener
-        client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle)
+        client.on(ChatInputInteractionEvent.class, GlobalSlashCommandListener::handle)
                 .then(client.onDisconnect())
-                .block(); // We use .block() as there is not another non-daemon thread and the jvm would close otherwise.
+                .subscribe();
+
+        client.on(ChatInputInteractionEvent.class, GuildSlashCommandListener::handle)
+                .then(client.onDisconnect())
+                .subscribe();
+
     }
 }

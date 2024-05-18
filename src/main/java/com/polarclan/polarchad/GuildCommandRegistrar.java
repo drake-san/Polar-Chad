@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class GuildCommandRegistrar {
     // The name of the folder the commands json is in, inside our resources folder
-    private static final String commandsFolderName = "commands/";
+    private static final String commandsFolderName = "commands/guild/";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final RestClient restClient;
 
