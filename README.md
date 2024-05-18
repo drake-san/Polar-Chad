@@ -14,17 +14,15 @@ Here's what Polar Chad brings to the party:
 
 - **Greeting Command**: Because a warm welcome is always appreciated, even in the icy tundra.
 - **Ping Command**: Test Polar Chad's reflexes and see if he's faster than a speeding penguin (probably not, but hey,
-  it's
-  fun!).
+  it's fun!).
 - **Joke Command**: Need a laugh? Polar Chad's got a stash of jokes that'll have you cracking up like a seal on nitrous
   oxide. (Okay, maybe not that strong, but still funny!)
 - **Sus Command**: Ever get that feeling someone's acting a little... sus? Use this command to expose the imposters
-  among
-  you!
+  among you!
 - **User Command**: Want to know more about yourself or a fellow server dweller? This command spills the beans (or
-  should we
-  say, fish?).
+  should we say, fish?).
 - **Server Command**: Get info about the server you're chilling in.
+- **Fact Command**: Get the fact of the day. Certainly useless, but true.
 
 This is just the beginning for Polar Chad! We're constantly evolving and adding new features to make your Discord
 experience even more epic.
