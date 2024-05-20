@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FactCommand implements SlashCommand {
 
-    private static final String factOfTheDay = "";
-
     @Override
     public String getName() {
         return "fact";
@@ -28,14 +26,6 @@ public class FactCommand implements SlashCommand {
                 .build();
 
         FactService factService = retrofit.create(FactService.class);
-
-//        try {
-//            factOfTheDay = factService.getFact().execute().body().getText();
-//        } catch (IOException exception) {
-//            System.err.println(exception.getMessage());
-//        }
-//
-//        return event.deferReply().then(event.createFollowup("**" + factOfTheDay + "**")).then();
 
         return event.deferReply()
                 .then(Mono.fromCallable(factService::getFact)) // Wrap call in Mono
@@ -65,7 +55,6 @@ public class FactCommand implements SlashCommand {
                     // Handle errors during call or reply
                     return event.editReply("An error occurred! Try again later.").thenReturn(null);
                 }).then();
-
 
     }
 }

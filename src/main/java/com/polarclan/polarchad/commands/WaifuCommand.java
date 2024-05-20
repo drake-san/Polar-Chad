@@ -1,18 +1,18 @@
 package com.polarclan.polarchad.commands;
 
+import com.polarclan.polarchad.data.waifu.Waifu;
 import com.polarclan.polarchad.services.WaifuService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import reactor.core.publisher.Mono;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.io.IOException;
-
 public class WaifuCommand implements SlashCommand {
-
-    private static String waifuImageUrl = "";
 
     @Override
     public String getName() {
@@ -29,26 +29,39 @@ public class WaifuCommand implements SlashCommand {
 
         WaifuService waifuService = retrofit.create(WaifuService.class);
 
-        boolean isNsfw = false;
+        boolean isNsfw;
 
         if (event.getOption("nsfw").isPresent())
             isNsfw = event.getOption("nsfw")
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asBoolean)
                     .get();
-
-        try {
-            waifuImageUrl = waifuService.getWaifu(isNsfw)
-                    .execute()
-                    .body()
-                    .getImages()
-                    .getFirst()
-                    .getUrl();
-        } catch (IOException exception) {
-            System.err.println(exception.getMessage());
+        else {
+            isNsfw = false;
         }
 
-        return event.deferReply().then(event.createFollowup(waifuImageUrl)).then();
+        return event.deferReply()
+                .then(Mono.fromCallable(() -> waifuService.getWaifu(isNsfw))
+                        .flatMap(call -> Mono.create(emitter -> {
+                            call.enqueue(new Callback<Waifu>() {
+                                @Override
+                                public void onResponse(Call<Waifu> call, Response<Waifu> response) {
+                                    if (response.isSuccessful()) {
+                                        String waifuImageUrl = response.body().getImages().getFirst().getUrl();
+                                        emitter.success(waifuImageUrl);
+                                    } else {
+                                        emitter.error(new Throwable("Response unsuccessful"));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Waifu> call, Throwable t) {
+                                    emitter.error(t);
+                                }
+                            });
+                        }))
+                        .flatMap(image -> event.editReply("" + image).thenReturn(image))
+                        .onErrorResume(throwable -> event.editReply("An error occurred! Try again later.").thenReturn(null)).then());
 
     }
 }

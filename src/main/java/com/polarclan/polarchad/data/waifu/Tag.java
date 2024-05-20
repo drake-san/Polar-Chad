@@ -6,19 +6,7 @@ public class Tag {
     private String description;
     private boolean isNsfw;
 
-    public int getTagId() {
-        return tagId;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isNsfw() {
-        return isNsfw;
     }
 }
