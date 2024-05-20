@@ -17,6 +17,10 @@ public class GuildSlashCommandListener {
         commands.add(new SusCommand());
         commands.add(new UserCommand());
         commands.add(new ServerCommand());
+        commands.add(new PingCommand());
+        commands.add(new JokeCommand());
+        commands.add(new FactCommand());
+        commands.add(new WaifuCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {

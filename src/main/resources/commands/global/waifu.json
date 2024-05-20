@@ -1,0 +1,12 @@
+{
+  "name": "waifu",
+  "description": "Get a waifu picture",
+  "options": [
+    {
+      "name": "nsfw",
+      "description": "Get a nsfw picture",
+      "type": 5,
+      "required": false
+    }
+  ]
+}
