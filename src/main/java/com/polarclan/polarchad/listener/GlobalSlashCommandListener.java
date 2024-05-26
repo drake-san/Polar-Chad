@@ -18,6 +18,7 @@ public class GlobalSlashCommandListener {
         commands.add(new JokeCommand());
         commands.add(new FactCommand());
         commands.add(new WaifuCommand());
+        commands.add(new BearCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {

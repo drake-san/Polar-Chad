@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -20,7 +21,16 @@ public class Main {
 
     private static boolean isGlobalCommand(ChatInputInteractionEvent event) {
 
-        return event.getInteraction().getChannel().block().getType() == Channel.Type.DM;
+        AtomicBoolean isDM = new AtomicBoolean(false);
+
+        event.getInteraction()
+                .getChannel()
+                .subscribe(channel -> {
+                    if (channel.getType() == Channel.Type.DM)
+                        isDM.set(true);
+                });
+
+        return isDM.get();
     }
 
     public static void main(String[] args) {
@@ -34,13 +44,13 @@ public class Main {
                 .block();
 
 
-        ClientActivity botActivity = ClientActivity.playing("The Harem");
-        ClientPresence botPresence = ClientPresence.doNotDisturb(botActivity);
+        ClientActivity botActivity = ClientActivity.playing("Flight Simulator");
+        ClientPresence botPresence = ClientPresence.online(botActivity);
 
         client.updatePresence(botPresence).subscribe();
 
         List<String> guildCommands = List.of("greet.json", "sus.json", "user.json", "server.json");
-        List<String> globalCommands = List.of("ping.json", "joke.json", "fact.json", "waifu.json");
+        List<String> globalCommands = List.of("ping.json", "joke.json", "fact.json", "waifu.json", "bear.json");
 
         try {
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(globalCommands);
@@ -64,6 +74,5 @@ public class Main {
                 })
                 .then(client.onDisconnect())
                 .block();
-
     }
 }
