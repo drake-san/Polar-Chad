@@ -22,6 +22,7 @@ public class GuildSlashCommandListener {
         commands.add(new FactCommand());
         commands.add(new WaifuCommand());
         commands.add(new BearCommand());
+        commands.add(new FoodCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {

@@ -44,13 +44,13 @@ public class Main {
                 .block();
 
 
-        ClientActivity botActivity = ClientActivity.playing("Flight Simulator");
-        ClientPresence botPresence = ClientPresence.online(botActivity);
+        ClientActivity botActivity = ClientActivity.playing("With your sister");
+        ClientPresence botPresence = ClientPresence.doNotDisturb(botActivity);
 
         client.updatePresence(botPresence).subscribe();
 
         List<String> guildCommands = List.of("greet.json", "sus.json", "user.json", "server.json");
-        List<String> globalCommands = List.of("ping.json", "joke.json", "fact.json", "waifu.json", "bear.json");
+        List<String> globalCommands = List.of("ping.json", "joke.json", "fact.json", "waifu.json", "bear.json", "food.json");
 
         try {
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(globalCommands);
