@@ -29,7 +29,7 @@ public class SusCommand implements SlashCommand {
                     else if (randomMember.isBot())
                         return Mono.just(randomMember.getMention() + "? Never suspected that a bot could act sussy.");
                     else
-                        return Mono.just("You're acting kinda sus " + randomMember + ". You might be the impostor!");
+                        return Mono.just("You're acting kinda sus " + randomMember.getMention() + ". You might be the impostor!");
 
                 }).flatMap(event::reply);
 

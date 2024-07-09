@@ -1,9 +1,6 @@
 package com.polarclan.polarchad.listener;
 
-import com.polarclan.polarchad.commands.FactCommand;
-import com.polarclan.polarchad.commands.JokeCommand;
-import com.polarclan.polarchad.commands.PingCommand;
-import com.polarclan.polarchad.commands.SlashCommand;
+import com.polarclan.polarchad.commands.*;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,6 +17,9 @@ public class GlobalSlashCommandListener {
         commands.add(new PingCommand());
         commands.add(new JokeCommand());
         commands.add(new FactCommand());
+        commands.add(new WaifuCommand());
+        commands.add(new BearCommand());
+        commands.add(new FoodCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {

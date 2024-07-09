@@ -12,31 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FactCommand implements SlashCommand {
 
-    private static String factOfTheDay = "";
-
-    public static void getFactOfTheDay() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://uselessfacts.jsph.pl")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FactService factService = retrofit.create(FactService.class);
-
-
-        factService.getFact().enqueue(new Callback<Fact>() {
-            @Override
-            public void onResponse(Call<Fact> call, Response<Fact> response) {
-                factOfTheDay = response.body().getText();
-            }
-
-            @Override
-            public void onFailure(Call<Fact> call, Throwable t) {
-                System.err.println(t.getMessage());
-            }
-        });
-    }
-
-
     @Override
     public String getName() {
         return "fact";
@@ -45,9 +20,41 @@ public class FactCommand implements SlashCommand {
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
 
-        event.reply("Here's the useless fact of the day").subscribe();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://uselessfacts.jsph.pl")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        return event.createFollowup("**" + factOfTheDay + "**").then();
+        FactService factService = retrofit.create(FactService.class);
+
+        return event.deferReply()
+                .then(Mono.fromCallable(factService::getFact)) // Wrap call in Mono
+                .flatMap(call -> {
+                    // Create Mono from Retrofit call execution
+                    return Mono.create(emitter -> {
+                        call.enqueue(new Callback<Fact>() {
+                            @Override
+                            public void onResponse(Call<Fact> call, Response<Fact> response) {
+                                if (response.isSuccessful()) {
+                                    String fact = response.body().getText();
+                                    emitter.success(fact); // Emit the fact if successful
+                                } else {
+                                    emitter.error(new Throwable("Response unsuccessful")); // Emit an error for unsuccessful response
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Fact> call, Throwable t) {
+                                emitter.error(t); // Emit the error from the network call
+                            }
+                        });
+                    });
+                })
+                .flatMap(fact -> event.editReply("**" + fact + "**").thenReturn(fact)) // Process fact and edit reply
+                .onErrorResume(throwable -> {
+                    // Handle errors during call or reply
+                    return event.editReply("An error occurred! Try again later.").thenReturn(null);
+                }).then();
 
     }
 }
