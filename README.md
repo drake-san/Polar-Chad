@@ -27,6 +27,7 @@ Here's what Polar Chad brings to the party:
 - **Server Command**: Get info about the server you're chilling in.
 - **Fact Command**: Get the fact of the day
 - **Waifu Command**: Onii chan!!!
+- **Bear Command**: Just see how our fellows look like
 - **Food Command**: Wanna eat something?
 
 This is just the beginning for Polar Chad! We're constantly evolving and adding new features to make your Discord
